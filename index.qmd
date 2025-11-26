@@ -1,0 +1,56 @@
+---
+title: "Test"
+format: html
+---
+
+# Test
+
+<label><input type="checkbox" class="tt-checkbox" data-pos="0"> A</label>
+<label><input type="checkbox" class="tt-checkbox" data-pos="1"> B</label>
+
+<div class="tt-block" id="x1" data-block>
+Block for 10 or 11
+</div>
+
+<div class="tt-block" id="x2" data-block>
+Block for 10
+</div>
+
+<style>
+  .tt-block { padding:8px; border:1px solid #ccc; margin-top:10px; }
+</style>
+
+<script>
+const truthTable = {
+  "10": ["x1", "x2"],
+  "11": ["x1"]
+};
+
+const defaultBlockId = "default";
+
+function readKey() {
+  const boxes = Array.from(document.querySelectorAll('.tt-checkbox'))
+    .sort((a,b) => Number(a.dataset.pos) - Number(b.dataset.pos));
+  return boxes.map(b => b.checked ? "1" : "0").join('');
+}
+
+function apply() {
+  const key = readKey();
+  const blocks = document.querySelectorAll('[data-block]');
+  const toShow = truthTable[key] || [];
+
+  blocks.forEach(el => {
+    if (toShow.includes(el.id)) el.style.display = "";
+    else if (toShow.length === 0 && el.id === defaultBlockId) el.style.display = "";
+    else el.style.display = "none";
+  });
+
+  console.log("SHOW:", toShow);
+}
+
+document.querySelectorAll('.tt-checkbox').forEach(cb =>
+  cb.addEventListener('change', apply)
+);
+
+apply();
+</script>
